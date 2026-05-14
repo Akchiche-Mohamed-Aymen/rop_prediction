@@ -1,5 +1,4 @@
 check_anomalies.py
-cleaned_drilling.csv
 drilling.csv
 preproccessing.py
 train.py
