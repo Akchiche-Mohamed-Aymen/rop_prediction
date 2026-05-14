@@ -1,0 +1,9 @@
+{
+    "features": [
+        "rpm",
+        "wob",
+        "flow_in",
+        "hardness_index"
+    ],
+    "importances": [0.09780328 , 0.07880055 ,0.5425358  ,0.28086037]
+}
