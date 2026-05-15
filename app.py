@@ -9,6 +9,7 @@ import json
 with open("stats.json", "r") as f:
     data = json.load(f)
     features = data['features']
+    init_features = data['init_features']
     importances = data['importances']
 
 st.set_page_config(
@@ -135,10 +136,10 @@ st.markdown("""
 @st.cache_resource
 def load_model():
     return load(open('model.pkl', 'rb'))
-
+from util import create_features
 @st.cache_data
 def load_data():
-    return read_csv('cleaned_drilling.csv', usecols=['rpm', 'wob', 'flow_in', 'hardness_index', 'rop'])
+    return create_features(read_csv('cleaned_drilling.csv', usecols=['rpm', 'wob', 'flow_in', 'hardness_index','rop' , 'depth_tmd' , 'depth_tvd' ]))
 
 try:
     model = load_model()
@@ -227,7 +228,7 @@ with tab1:
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    fi_pairs = sorted(zip(features, importances), key=lambda x: x[1], reverse=True)
+    fi_pairs = sorted(zip(features, importances), key=lambda x: x[1], reverse=True)[:6:]
     max_imp  = max(imp for _, imp in fi_pairs) if fi_pairs else 1
     colours  = ["#f97316", "#fb923c", "#fdba74", "#94a3b8"]
 
@@ -266,9 +267,6 @@ with tab1:
     components.html(fi_html, height=60 + len(fi_pairs) * 48)
 
 
-# ════════════════════════════════════════════════════════════════════════════════
-# TAB 2 — Manual Prediction
-# ════════════════════════════════════════════════════════════════════════════════
 with tab2:
     st.markdown('<div class="section-label" style="margin-bottom:1rem">Enter drilling parameters — derived features are computed automatically by the API</div>', unsafe_allow_html=True)
 
@@ -279,10 +277,12 @@ with tab2:
     with c1:
         rpm           = num_input("rpm", "rpm")
         wob           = num_input("wob", "wob")
-    with c2:
         flow_in        = num_input("flow_in", "flow_in")
+    with c2:
+        
         hardness_index = num_input("hardness_index", "hardness_index")
-
+        depth_tmd = num_input("depth_tmd", "depth_tmd")
+        depth_tvd = num_input("depth_tvd", "depth_tvd")
     st.markdown("<br>", unsafe_allow_html=True)
     predict_btn = st.button("⚡  PREDICT ROP", key="predict_manual")
 
@@ -291,7 +291,9 @@ with tab2:
             "rpm":            [rpm],
             "flow_in":        [flow_in],
             "hardness_index": [hardness_index],
-            "wob":            [wob]
+            "wob":            [wob],
+            "depth_tmd":            [depth_tmd],
+            "depth_tvd":            [depth_tvd],
         }
 
         prediction = predict(input_data)
