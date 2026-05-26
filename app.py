@@ -1,6 +1,5 @@
 from pickle import load
 from pandas import read_csv
-import pandas as pd
 import streamlit as st
 import numpy as np
 from api import predict
@@ -136,13 +135,16 @@ st.markdown("""
 @st.cache_resource
 def load_model():
     return load(open('model.pkl', 'rb'))
+def load_kmeans():
+    return load(open('kmeans.pkl', 'rb'))
 from util import create_features
 @st.cache_data
 def load_data():
-    return create_features(read_csv('cleaned_drilling.csv', usecols=['rpm', 'wob', 'flow_in', 'hardness_index','rop' , 'depth_tmd' , 'depth_tvd' ]))
+    return create_features(read_csv('cleaned_drilling.csv', usecols=['rpm', 'wob', 'flow_in','rop' , 'depth_tmd' , 'depth_tvd' ]))
 
 try:
     model = load_model()
+    kmeans = load_kmeans()
     df    = load_data()
 except FileNotFoundError as e:
     st.error(f"❌ File not found: {e}")
@@ -178,6 +180,7 @@ with tab1:
     seed      = int(random_seed) + st.session_state.get("seed_offset", 0)
     sample_df = df.sample(n=n_samples, random_state=seed)
     X_sample  = sample_df.drop(columns=['rop'])
+    X_sample['cluster'] = kmeans.predict(X_sample)
     y_sample  = sample_df['rop'].reset_index(drop=True)
     y_pred    = model.predict(X_sample)
     abs_error = np.abs(y_sample.values - y_pred)
@@ -201,7 +204,7 @@ with tab1:
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    DISPLAY_COLS = ["rpm", "wob", "flow_in", "hardness_index"]
+    DISPLAY_COLS = ["rpm", "wob", "flow_in"]
     results = X_sample.reset_index(drop=True)[DISPLAY_COLS].copy()
     results.insert(0, "sample_idx", sample_df.index.tolist())
     results["rop_actual"] = y_sample.values

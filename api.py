@@ -8,11 +8,14 @@ with open("stats.json", "r") as f:
     cols2 = data['features']
 
 model = load(open('model.pkl', 'rb'))
+kmeans = load(open('kmeans.pkl', 'rb'))
 def predict(input_data):
     try:
         df = DataFrame(input_data)
         df = df[cols1]
-        df = create_features(df)[cols2]
+        df = create_features(df)
+        df ['cluster'] = kmeans.predict(df)
+        df = df[cols2]
         prediction = model.predict(df)
         return prediction[0]
     except :

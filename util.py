@@ -21,25 +21,12 @@ def create_features(df):
 
     df["depth_tmd_wob"] = df["depth_tmd"] * df["wob"]
     df["depth_tmd_rpm"] = df["depth_tmd"] * df["rpm"]
-
-    df["depth_tvd_hardness"] = df["depth_tvd"] * df["hardness_index"]
-    df["depth_tmd_hardness"] = df["depth_tmd"] * df["hardness_index"]
-
-    # =========================
-    # 3. Hardness resistance features
-    # =========================
-    df["wob_per_hardness"] = df["wob"] / (df["hardness_index"] + eps)
-    df["rpm_per_hardness"] = df["rpm"] / (df["hardness_index"] + eps)
-    df["flow_per_hardness"] = df["flow_in"] / (df["hardness_index"] + eps)
-
+  
     # =========================
     # 4. Combined energy feature
     # =========================
     df["energy_proxy"] = df["wob"] * df["rpm"] * df["flow_in"]
 
-    # =========================
-    # 5. Regime ratios
-    # =========================
     df["wob_flow_ratio"] = df["wob"] / (df["flow_in"] + eps)
     df["rpm_flow_ratio"] = df["rpm"] / (df["flow_in"] + eps)
 
