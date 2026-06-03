@@ -283,7 +283,6 @@ with tab2:
         flow_in        = num_input("flow_in", "flow_in")
     with c2:
         
-        hardness_index = num_input("hardness_index", "hardness_index")
         depth_tmd = num_input("depth_tmd", "depth_tmd")
         depth_tvd = num_input("depth_tvd", "depth_tvd")
     st.markdown("<br>", unsafe_allow_html=True)
@@ -293,7 +292,6 @@ with tab2:
         input_data = {
             "rpm":            [rpm],
             "flow_in":        [flow_in],
-            "hardness_index": [hardness_index],
             "wob":            [wob],
             "depth_tmd":            [depth_tmd],
             "depth_tvd":            [depth_tvd],

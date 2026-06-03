@@ -17,6 +17,7 @@ def predict(input_data):
         df ['cluster'] = kmeans.predict(df)
         df = df[cols2]
         prediction = model.predict(df)
+        print(prediction)
         return prediction[0]
     except :
         return -10000000000
