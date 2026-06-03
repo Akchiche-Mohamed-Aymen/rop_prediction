@@ -160,7 +160,6 @@ with tab1:
     with st.sidebar:
         st.markdown("### ⚙️ SAMPLING CONFIG")
         n_samples   = st.slider("Number of samples", 5, 50, 10)
-        random_seed = st.number_input("Random seed", value=42, step=1)
         st.markdown("---")
         st.markdown(
             "<div style='color:#8b949e;font-size:0.75rem;font-family:Share Tech Mono,monospace'>"
@@ -177,8 +176,7 @@ with tab1:
             st.session_state.seed_offset = 0
         st.session_state.seed_offset += 1
 
-    seed      = int(random_seed) + st.session_state.get("seed_offset", 0)
-    sample_df = df.sample(n=n_samples, random_state=seed)
+    sample_df = df.sample(n=n_samples)
     X_sample  = sample_df.drop(columns=['rop'])
     X_sample['cluster'] = kmeans.predict(X_sample)
     y_sample  = sample_df['rop'].reset_index(drop=True)
