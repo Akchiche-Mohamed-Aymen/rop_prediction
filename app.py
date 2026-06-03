@@ -1,4 +1,5 @@
 from pickle import load
+from venv import create
 from pandas import read_csv
 import streamlit as st
 import numpy as np
@@ -179,10 +180,10 @@ with tab1:
     sample_df = df.sample(n=n_samples)
     X_sample  = sample_df.drop(columns=['rop'])
     X_sample['cluster'] = kmeans.predict(X_sample)
+    X_sample = create_features(X_sample)[features]
     y_sample  = sample_df['rop'].reset_index(drop=True)
     y_pred    = model.predict(X_sample)
     abs_error = np.abs(y_sample.values - y_pred)
-
     mae  = abs_error.mean()
     mape = (abs_error / np.where(y_sample != 0, y_sample, np.nan)).mean() * 100
     r2   = 1 - np.sum((y_sample - y_pred)**2) / np.sum((y_sample - y_sample.mean())**2)
