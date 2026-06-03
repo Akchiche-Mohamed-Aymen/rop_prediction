@@ -179,8 +179,9 @@ with tab1:
 
     sample_df = df.sample(n=n_samples)
     X_sample  = sample_df.drop(columns=['rop'])
+    X_sample = create_features(X_sample)
     X_sample['cluster'] = kmeans.predict(X_sample)
-    X_sample = create_features(X_sample)[features]
+    X_sample = X_sample[features]
     y_sample  = sample_df['rop'].reset_index(drop=True)
     y_pred    = model.predict(X_sample)
     abs_error = np.abs(y_sample.values - y_pred)
