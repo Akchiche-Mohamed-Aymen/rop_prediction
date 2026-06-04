@@ -1,10 +1,10 @@
 from pickle import load
-from venv import create
 from pandas import read_csv
 import streamlit as st
 import numpy as np
 from api import predict
 import json
+from util import create_features
 
 with open("stats.json", "r") as f:
     data = json.load(f)
@@ -147,6 +147,8 @@ try:
     model = load_model()
     kmeans = load_kmeans()
     df    = load_data()
+    df = create_features(df)
+    df['cluster'] = kmeans.predict(df.drop(columns=['rop']))
 except FileNotFoundError as e:
     st.error(f"❌ File not found: {e}")
     st.stop()
@@ -179,8 +181,6 @@ with tab1:
 
     sample_df = df.sample(n=n_samples)
     X_sample  = sample_df.drop(columns=['rop'])
-    X_sample = create_features(X_sample)
-    X_sample['cluster'] = kmeans.predict(X_sample)
     X_sample = X_sample[features]
     y_sample  = sample_df['rop'].reset_index(drop=True)
     y_pred    = model.predict(X_sample)
@@ -188,7 +188,6 @@ with tab1:
     mae  = abs_error.mean()
     mape = (abs_error / np.where(y_sample != 0, y_sample, np.nan)).mean() * 100
     r2   = 1 - np.sum((y_sample - y_pred)**2) / np.sum((y_sample - y_sample.mean())**2)
-
     m1, m2, m3, m4 = st.columns(4)
     with m1:
         st.markdown(f'<div class="metric-card"><div class="metric-label">Samples</div><div class="metric-value">{n_samples}</div></div>', unsafe_allow_html=True)
@@ -228,9 +227,7 @@ with tab1:
 
     # ── Feature Importance ────────────────────────────────────────────────────
     import streamlit.components.v1 as components
-
     st.markdown("<br>", unsafe_allow_html=True)
-
     fi_pairs = sorted(zip(features, importances), key=lambda x: x[1], reverse=True)[:6:]
     max_imp  = max(imp for _, imp in fi_pairs) if fi_pairs else 1
     colours  = ["#f97316", "#fb923c", "#fdba74", "#94a3b8"]
@@ -280,7 +277,7 @@ with tab2:
     with c1:
         rpm           = num_input("rpm", "rpm")
         wob           = num_input("wob", "wob")
-        flow_in        = num_input("flow_in", "flow_in")
+        flow_in        = num_input("Flow Rate", "flow_in")
     with c2:
         
         depth_tmd = num_input("depth_tmd", "depth_tmd")
