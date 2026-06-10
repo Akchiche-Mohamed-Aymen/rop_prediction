@@ -1,7 +1,6 @@
 
 from sklearn.metrics import mean_squared_error , r2_score , mean_absolute_error   , mean_absolute_percentage_error
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.model_selection import train_test_split 
 from util import create_features
 from sklearn.cluster import KMeans
 import pandas as pd
@@ -36,16 +35,11 @@ y = df['rop']
 kmeans = KMeans(n_clusters=7, random_state=42)
 kmeans.fit(X)
 X['cluster'] = kmeans.labels_
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2,shuffle=True, random_state=42)
 model = RandomForestRegressor(n_estimators=35,min_samples_leaf=5,max_depth=12, random_state=42 )
-model.fit(X_train , y_train)
+model.fit(X , y)
 importances = list(model.feature_importances_)
 feature_names = list(X.columns)
-print('Train')
-evaluate_model(model , X_train , y_train)
-print('\nTest')
-evaluate_model(model , X_test , y_test)
-
+evaluate_model(model , X , y)
 import json 
 with open('stats.json', "w", encoding="utf-8") as f:
     json.dump({
