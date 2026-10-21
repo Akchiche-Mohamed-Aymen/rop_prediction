@@ -10,6 +10,13 @@ A machine learning application that predicts the **Rate of Penetration (ROP)** i
 ![Scikit Learn](https://img.shields.io/badge/Scikit--Learn-F7931E?style=for-the-badge&logo=scikitlearn&logoColor=white)
 ![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)
 
+
+## 🎥 Demo
+
+A video demonstration of the application added here.
+
+https://github.com/user-attachments/assets/950110ed-f8fd-4706-affb-f1072928d533
+
 ## 📋 Overview
 
 This project develops an end-to-end machine learning workflow for predicting drilling Rate of Penetration (ROP) from operational parameters.
@@ -162,12 +169,6 @@ rop_prediction/
 ├── requirements.txt             # Project dependencies
 └── README.md                    # Project documentation
 ```
-
-## 🎥 Demo
-
-A video demonstration of the application will be added here.
-
-**Coming soon:** The demo will showcase the application workflow, drilling parameter inputs, and ROP predictions.
 
 <!-- Add your video link after recording and uploading the demo. -->
 
